@@ -3,7 +3,7 @@ name: Update SmartDNS Rules
 on:
   schedule:
     # 每天 UTC 20:00 (北京时间凌晨 04:01) 自动运行
-    - cron: '1 20 * * *'
+    - cron: '1 0 * * *'
   workflow_dispatch: # 支持手动一键运行
 
 jobs:
