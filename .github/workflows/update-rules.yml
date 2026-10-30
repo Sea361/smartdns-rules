@@ -1,0 +1,33 @@
+name: Update SmartDNS Rules
+
+on:
+  schedule:
+    # 每天 UTC 20:00 (北京时间凌晨 04:00) 自动运行
+    - cron: '0 20 * * *'
+  workflow_dispatch: # 支持手动一键运行
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Run Build Script
+        run: |
+          chmod +x build.sh
+          ./build.sh
+
+      - name: Commit and Push Rules
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add kill-ad-for-smartdns.conf
+          if git diff --staged --quiet; then
+            echo "规则未发生变化，无需推送"
+          else
+            git commit -m "Auto update rules: $(date '+%Y-%m-%d %H:%M:%S')"
+            git push
+          fi
